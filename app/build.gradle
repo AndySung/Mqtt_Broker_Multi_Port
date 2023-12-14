@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace 'com.soft.nice.testservice'
+    namespace 'com.soft.nice.mqttservice'
     compileSdk 34
 
     defaultConfig {
-        applicationId "com.soft.nice.testservice"
+        applicationId "com.soft.nice.mqttservice"
         minSdk 29
         targetSdk 34
         versionCode 1
@@ -35,7 +35,6 @@ android {
 }
 
 dependencies {
-
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.10.0'
     testImplementation 'junit:junit:4.13.2'

@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.net.wifi.WifiManager;
 import android.text.format.Formatter;
 import android.util.Log;
-
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

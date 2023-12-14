@@ -10,9 +10,6 @@ import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
-
-import com.soft.nice.testservice.R;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
