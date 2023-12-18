@@ -58,7 +58,7 @@ public class MQTTPortOneService extends Service {
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
         }
-        startForeground(1, StartNotification("MQTT Service running..."));
+        startForeground(101, StartNotification("MQTT Service running..."));
         return START_STICKY;
     }
 
@@ -90,7 +90,7 @@ public class MQTTPortOneService extends Service {
                 .setOngoing(true)
                 .setTicker("MQTT")
                 .setOnlyAlertOnce(true)
-                .setSmallIcon(R.mipmap.ic_launcher);
+                .setSmallIcon(R.drawable.ic_robot);
         notification.setContentIntent(pendingIntent);
         return notification.build();
     }

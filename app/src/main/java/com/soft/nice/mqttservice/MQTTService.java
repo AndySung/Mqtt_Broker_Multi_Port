@@ -139,7 +139,7 @@ public class MQTTService extends Service {
                 .setOngoing(true)
                 .setTicker("MQTT")
                 .setOnlyAlertOnce(true)
-                .setSmallIcon(R.drawable.ic_robot);
+                .setSmallIcon(R.mipmap.app_icon);
         notification.setContentIntent(pendingIntent);
         return notification.build();
     }
