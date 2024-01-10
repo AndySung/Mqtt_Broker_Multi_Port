@@ -1,6 +1,7 @@
 package com.soft.nice.mqttservice;
 
 import android.app.Application;
+import android.os.Environment;
 import android.util.Log;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -12,18 +13,23 @@ import java.util.Properties;
 import io.moquette.BrokerConstants;
 
 public class MyApp extends Application {
-    private static MyApp instance;
-    private static File confFile, confFile8882, confFile8883, passwordFile, aclFile;
-
+    public static MyApp instance;
+    public static File confFile, confFile8882, confFile8883, passwordFile, aclFile;
+    public static Properties props;
+    String storage;
+    File MqttDirFile;
     @Override
     public void onCreate() {
         super.onCreate();
         instance = this;
-        confFile = new File(getApplicationContext().getDir("media", 0).getAbsolutePath() +"/"+ Utils.BROKER_CONFIG_FILE);
-        confFile8882 = new File(getApplicationContext().getDir("media", 0).getAbsolutePath() +"/"+ Utils.BROKER_CONFIG_PORT8882_FILE);
-        confFile8883 = new File(getApplicationContext().getDir("media", 0).getAbsolutePath() +"/"+ Utils.BROKER_CONFIG_PORT8883_FILE);
-        passwordFile = new File(getApplicationContext().getDir("media", 0).getAbsolutePath() +"/"+ Utils.PASSWORD_FILE);
-        aclFile = new File(getApplicationContext().getDir("media",0).getAbsolutePath() + "/"+Utils.ACL_FILE);
+        makeMqttFolder();
+        //getApplicationContext().getDir("media", 0).getAbsolutePath()  目录：data/data/com.soft.xxx
+        confFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) +"/mqtt/"+ Utils.BROKER_CONFIG_FILE);
+        confFile8882 = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) +"/mqtt/"+ Utils.BROKER_CONFIG_PORT8882_FILE);
+        confFile8883 = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) +"/mqtt/"+ Utils.BROKER_CONFIG_PORT8883_FILE);
+        passwordFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) +"/mqtt/"+ Utils.PASSWORD_FILE);
+        aclFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + "/mqtt/"+Utils.ACL_FILE);
+        props = new Properties();
     }
 
     public static MyApp getInstance() {
@@ -31,21 +37,22 @@ public class MyApp extends Application {
     }
 
     public static Properties defaultConfig(String whichPort, File whichFile) {
-        Properties props = new Properties();
         props.setProperty( BrokerConstants.PERSISTENT_STORE_PROPERTY_NAME, getInstance().getExternalFilesDir(null).getAbsolutePath() + File.separator + BrokerConstants.DEFAULT_MOQUETTE_STORE_MAP_DB_FILENAME);
         props.setProperty(BrokerConstants.PORT_PROPERTY_NAME, whichPort);               //指定端口号
         props.setProperty(BrokerConstants.NEED_CLIENT_AUTH, "true");                    //必须设置用户名认证，不允许匿名连接
         props.setProperty(BrokerConstants.HOST_PROPERTY_NAME, BrokerConstants.HOST);    //这里直接设置成 0.0.0.0
         props.setProperty(BrokerConstants.WEB_SOCKET_PORT_PROPERTY_NAME, String.valueOf(BrokerConstants.WEBSOCKET_PORT));   //websocket 端口号
-        writeToAclFile(MyApp.getAclFile());                                                        //订阅topic规则文件
+//        writeToAclFile(MyApp.getAclFile());                                                        //订阅topic规则文件
         props.setProperty(BrokerConstants.ALLOW_ANONYMOUS_PROPERTY_NAME, "false");      //不允许匿名连接
-        writeToPasswordFile(MyApp.getPasswordFile());                                              //设定用户名密码
+//        writeToPasswordFile(MyApp.getPasswordFile());                                              //设定用户名密码
         props.setProperty(BrokerConstants.PASSWORD_FILE_PROPERTY_NAME, MyApp.getPasswordFile().getAbsolutePath()); //保存密码文件
         props.setProperty(BrokerConstants.ACL_FILE_PROPERTY_NAME, MyApp.getAclFile().getAbsolutePath());   //保存topic规则文件
         try (OutputStream output = new FileOutputStream(whichFile)) {
             props.store(output, "Last saved on " + new Date());     //添加文件更新时间
             return props;
         } catch (IOException io) {
+            writeToAclFile(MyApp.getAclFile());
+            writeToPasswordFile(MyApp.getPasswordFile());
             Log.i("MAIN", "Unable to load broker config file. Using default config");
             return defaultConfig("1883", MyApp.getConfFile());
         }
@@ -59,10 +66,10 @@ public class MyApp extends Application {
             fileOutputStream.write("topic read SYS/test\n".getBytes());
             fileOutputStream.write("# This only affects clients with username \"admin\".\n".getBytes());
             fileOutputStream.write("user admin\n".getBytes());
-            fileOutputStream.write("topic beijing\n".getBytes());
+            fileOutputStream.write("topic beijin\n".getBytes());
             fileOutputStream.write("# This only affects clients with username \"admin123\".\n".getBytes());
             fileOutputStream.write("user admin123\n".getBytes());
-            fileOutputStream.write("topic nanjing\n".getBytes());
+            fileOutputStream.write("topic nanjin\n".getBytes());
             fileOutputStream.write("# This only affects clients with username \"admin345\".\n".getBytes());
             fileOutputStream.write("user admin345\n".getBytes());
             fileOutputStream.write("topic shanghai\n".getBytes());
@@ -115,5 +122,18 @@ public class MyApp extends Application {
 
     public static File getAclFile() {
         return aclFile;
+    }
+
+    public static void makeMqttFolder() {
+        String folderPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + "/mqtt";
+        File folder = new File(folderPath);
+        if(!folder.exists()) {
+            boolean success = folder.mkdirs();
+            if(success) {
+                Log.i("MyApp", "文件夹创建成功");
+            }else{
+                Log.i("MyApp", "文件夹创建失败");
+            }
+        }
     }
 }
