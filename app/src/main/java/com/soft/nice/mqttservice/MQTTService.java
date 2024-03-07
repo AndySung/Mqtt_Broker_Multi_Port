@@ -1,5 +1,6 @@
 package com.soft.nice.mqttservice;
 
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -87,6 +88,7 @@ public class MQTTService extends Service {
     }
 
     // 调用startService方法启动Service时调用该方法
+    @SuppressLint("ForegroundServiceType")
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.e(TAG, "onStart()");
