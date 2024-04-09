@@ -13,6 +13,7 @@ import java.util.Properties;
 import io.moquette.BrokerConstants;
 
 public class MyApp extends Application {
+    private static final String TAG = "NiceCIC>>>>>>>>MyApp";
     public static MyApp instance;
     public static File confFile, confFile8882, confFile8883, passwordFile, aclFile;
     public static Properties props;
@@ -130,9 +131,9 @@ public class MyApp extends Application {
         if(!folder.exists()) {
             boolean success = folder.mkdirs();
             if(success) {
-                Log.i("MyApp", "文件夹创建成功");
+                Log.i(TAG, "Folder created successfully");
             }else{
-                Log.i("MyApp", "文件夹创建失败");
+                Log.i(TAG, "Folder creation failed");
             }
         }
     }

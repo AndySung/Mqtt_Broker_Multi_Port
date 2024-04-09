@@ -17,7 +17,7 @@ import java.util.Properties;
 import io.moquette.server.Server;
 
 public class MQTTPortOneService extends Service {
-    private static final String TAG = "MyService";
+    private static final String TAG = "NiceCIC>>>>>>>>MQTTPortOneService";
     public static final String CHANNEL_ID = "mqttBrokerChannel_8882";
     private final IBinder myBinder = new LocalBinder();
     PendingIntent pendingIntent;

@@ -13,6 +13,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 public class Utils {
+    private static final String TAG = "NiceCIC>>>>>>>>Utils";
     public static final String PASSWORD_FILE = "pwd.conf";
     public static final String BROKER_CONFIG_FILE = "mqtt.properties";
     public static final String BROKER_CONFIG_PORT8882_FILE = "mqtt_port_8882.properties";
@@ -23,10 +24,10 @@ public class Utils {
         ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         if (manager != null) {
             List<ActivityManager.RunningServiceInfo> serviceList = manager.getRunningServices(Integer.MAX_VALUE);
-            Log.i("andysong--service:", serviceList.size()+"\n");
+            Log.i(TAG, serviceList.size()+"\n");
             if (serviceList != null) {
                 for (ActivityManager.RunningServiceInfo serviceInfo : serviceList) {
-                    Log.i("andysong--serviceName:", serviceInfo.service.getClassName()+"\n");
+                    Log.i(TAG, serviceInfo.service.getClassName()+"\n");
                     if (serviceClass.getName().equals(serviceInfo.service.getClassName())) {
                         return true;
                     }

@@ -17,7 +17,7 @@ import java.util.Properties;
 import io.moquette.server.Server;
 
 public class MQTTTwoPortService extends Service {
-    private static final String TAG = "MyService";
+    private static final String TAG = "NiceCIC>>>>>>>>MQTTTwoPortService";
     public static final String CHANNEL_ID = "mqttBrokerChannel_8883";
     PendingIntent pendingIntent;
     Server server;

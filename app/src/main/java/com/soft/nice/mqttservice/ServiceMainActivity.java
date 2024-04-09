@@ -22,7 +22,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 public class ServiceMainActivity extends Activity {
-    private static final String TAG = "ServiceMainActivity";
+    private static final String TAG = "NiceCIC>>>>>>>>ServiceMainActivity";
     //记录是否第一次启动
     private static final String PREF_NAME = "MyPrefs";
     private static final String KEY_FIRST_RUN = "firstRun";

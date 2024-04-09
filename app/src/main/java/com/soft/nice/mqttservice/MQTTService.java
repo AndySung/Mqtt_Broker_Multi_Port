@@ -22,7 +22,7 @@ import java.util.Properties;
 import io.moquette.server.Server;
 
 public class MQTTService extends Service {
-    private static final String TAG = "MyService";
+    private static final String TAG = "NiceCIC>>>>>>>>MQTTService";
     public static final String CHANNEL_ID = "mqttBrokerChannel_1883";
     private final IBinder myBinder = new LocalBinder();
     PendingIntent pendingIntent;
