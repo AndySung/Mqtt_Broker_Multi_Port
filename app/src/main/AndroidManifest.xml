@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -16,12 +18,12 @@
         android:icon="@mipmap/app_icon"
         android:allowBackup="true"
         android:supportsRtl="true"
-        android:persistent="true"
         android:excludeFromRecents="true"
         android:theme="@android:style/Theme.NoDisplay"
-        android:label="@string/app_name" >
+        android:sharedUserId="android.uid.system"
+        android:label="@string/app_name"
+        tools:ignore="Deprecated">
         <activity
-            android:label="@string/app_name"
             android:name=".ServiceMainActivity"
             android:exported="true">
             <intent-filter >
@@ -31,19 +33,20 @@
         </activity>
         <!-- 注册Service -->
         <service android:name=".MQTTService"
-            android:exported="true">
+            android:persistent="true"
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.soft.nice.service.MQTTService" />
             </intent-filter>
         </service>
         <service android:name=".MQTTPortOneService"
-            android:exported="true">
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.soft.nice.service.MQTTPortOneService" />
             </intent-filter>
         </service>
         <service android:name=".MQTTTwoPortService"
-            android:exported="true">
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.soft.nice.service.MQTTTwoPortService" />
             </intent-filter>

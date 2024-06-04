@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.net.wifi.WifiManager;
 import android.text.format.Formatter;
 import android.util.Log;
+
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -25,12 +26,10 @@ public class Utils {
         if (manager != null) {
             List<ActivityManager.RunningServiceInfo> serviceList = manager.getRunningServices(Integer.MAX_VALUE);
             Log.i(TAG, serviceList.size()+"\n");
-            if (serviceList != null) {
-                for (ActivityManager.RunningServiceInfo serviceInfo : serviceList) {
-                    Log.i(TAG, serviceInfo.service.getClassName()+"\n");
-                    if (serviceClass.getName().equals(serviceInfo.service.getClassName())) {
-                        return true;
-                    }
+            for (ActivityManager.RunningServiceInfo serviceInfo : serviceList) {
+                Log.i(TAG, serviceInfo.service.getClassName() + "\n");
+                if (serviceClass.getName().equals(serviceInfo.service.getClassName())) {
+                    return true;
                 }
             }
         }
@@ -52,6 +51,7 @@ public class Utils {
                 .setMessage(message)
                 .setCancelable(false)
                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                     }

@@ -12,22 +12,22 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Binder;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
+
+import java.util.Objects;
 
 import io.moquette.server.Server;
 
+/**
+ * @author AndySong
+ */
 public class MQTTService extends Service {
     private static final String TAG = "NiceCIC>>>>>>>>MQTTService";
     public static final String CHANNEL_ID = "mqttBrokerChannel_1883";
     private final IBinder myBinder = new LocalBinder();
     PendingIntent pendingIntent;
     IntentFilter intentFilter;
-    Properties config = new Properties();
     Server server;
 
     private final BroadcastReceiver mReceiverBroadCast = new BroadcastReceiver() {
@@ -41,30 +41,24 @@ public class MQTTService extends Service {
             IntentPortTwo.setClass(getApplicationContext(), MQTTTwoPortService.class);
 
             if(msg != null) {
-                if (msg.equals("open_port_8882")) {
-                    Bundle bundlePortOne = new Bundle();
-                    bundlePortOne.putSerializable("config_8882", MyApp.defaultConfig("8882", MyApp.getConfFile8882()));
-                    IntentPortOne.putExtras(bundlePortOne);
+                if ("open_port_8882".equals(msg)) {
                     if(!Utils.isServiceRunning(context.getApplicationContext(), MQTTPortOneService.class)) {
                         startService(IntentPortOne);
                     }
-                } else if (msg.equals("open_port_8883")) {
-                    Bundle bundlePortTwo = new Bundle();
-                    bundlePortTwo.putSerializable("config_8883", MyApp.defaultConfig("8883", MyApp.getConfFile8883()));
-                    IntentPortTwo.putExtras(bundlePortTwo);
+                } else if ("open_port_8883".equals(msg)) {
                     if(!Utils.isServiceRunning(context.getApplicationContext(), MQTTTwoPortService.class)) {
                         startService(IntentPortTwo);
                     }
-                }else if (msg.equals("stop_port_8882")) {
+                }else if ("stop_port_8882".equals(msg)) {
                     stopService(IntentPortOne);
-                }else if (msg.equals("stop_port_8883")) {
+                }else if ("stop_port_8883".equals(msg)) {
                     stopService(IntentPortTwo);
                 }
             }
         }
     };
 
-    //提供给客户端访问
+    /** 提供给客户端访问 **/
     public class LocalBinder extends Binder {
         MQTTService getService() {
             return MQTTService.this;
@@ -77,28 +71,28 @@ public class MQTTService extends Service {
         return myBinder;
     }
 
-    // 调用startService方法或者bindService方法时创建Service时（当前Service未创建）调用该方法
+    /** 调用startService方法或者bindService方法时创建Service时（当前Service未创建）调用该方法 **/
+    @SuppressLint("UnspecifiedRegisterReceiverFlag")
     @Override
     public void onCreate() {
         Log.e(TAG, "onCreate()");
         // 配置文件
         intentFilter=new IntentFilter();
-        intentFilter.addAction("android.intent.action.BROADCAST_FORM_ADB"); //接收adb发送过来的广播包
-        registerReceiver(mReceiverBroadCast, intentFilter);         //注册广播
+        //接收adb发送过来的广播包
+        intentFilter.addAction("android.intent.action.BROADCAST_FORM_ADB");
+        //注册广播
+        registerReceiver(mReceiverBroadCast, intentFilter);
     }
 
-    // 调用startService方法启动Service时调用该方法
-    @SuppressLint("ForegroundServiceType")
+    /** 调用startService方法启动Service时调用该方法 **/
+    @SuppressLint({"ForegroundServiceType", "ObsoleteSdkInt"})
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.e(TAG, "onStart()");
-        Log.i(TAG, "message:"+intent.getSerializableExtra("config")+"");
-        if(intent.getSerializableExtra("config") != null){
-            Map<String, String> map = (HashMap) intent.getSerializableExtra("config");
-            config.putAll(map);
-        }
         Intent notificationIntent = getBaseContext().getPackageManager().getLaunchIntentForPackage(getPackageName());
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        if(intent!=null) {
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        }
         int flag = 0;
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             flag = PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE;
@@ -109,17 +103,16 @@ public class MQTTService extends Service {
         try {
             // use ServerInstance singleton to get the same instance of server
             server = new Server();
-            server.startServer(config);
-            Log.d(TAG, "MQTT Broker Started" + config.toString());
+            server.startServer(MyApp.defaultConfig("1883", MyApp.getConfFile()));
         } catch (Exception e) {
-            Log.e(TAG, e.getMessage());
+            Log.e(TAG, Objects.requireNonNull(e.getMessage()));
         }
-        startForeground(1, StartNotification("MQTT Service running..."));
+        startForeground(1, startNotification());
         return START_STICKY;
 
     }
 
-    // Service创建并启动后在调用stopService方法或unbindService方法时调用该方法
+    /** Service创建并启动后在调用stopService方法或unbindService方法时调用该方法 **/
     @Override
     public void onDestroy() {
         server.stopServer();
@@ -127,7 +120,7 @@ public class MQTTService extends Service {
         Log.e(TAG, "onDestroy()");
     }
 
-    private Notification StartNotification(String ContentId){
+    private Notification startNotification(){
         NotificationChannel channel = new NotificationChannel(
                 CHANNEL_ID,
                 "Notification Broker",
@@ -136,7 +129,7 @@ public class MQTTService extends Service {
         NotificationManager notificationManager=getSystemService(NotificationManager.class);
         notificationManager.createNotificationChannel(channel);
         Notification.Builder notification = new Notification.Builder(this, CHANNEL_ID)
-                .setContentText(ContentId)
+                .setContentText("MQTT Service running...")
                 .setContentTitle("MQTT Service")
                 .setOngoing(true)
                 .setTicker("MQTT")

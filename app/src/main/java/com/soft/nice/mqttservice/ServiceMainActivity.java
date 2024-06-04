@@ -2,25 +2,18 @@ package com.soft.nice.mqttservice;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.ServiceConnection;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.IBinder;
 import android.provider.Settings;
-import android.util.Log;
-import android.widget.Toast;
 
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
+/**
+ * @author AndySong
+ */
 public class ServiceMainActivity extends Activity {
     private static final String TAG = "NiceCIC>>>>>>>>ServiceMainActivity";
     //记录是否第一次启动
@@ -38,10 +31,8 @@ public class ServiceMainActivity extends Activity {
             // 设置标记位，表示已经执行过
             setFirstRun(false);
         }
-
         getFilePermission();
-
-        startDefaultPort();
+        startUseService(ServiceMainActivity.this, MQTTService.class);
     }
 
     @Override
@@ -82,19 +73,10 @@ public class ServiceMainActivity extends Activity {
         super.onDestroy();
     }
 
-    private void startDefaultPort(){
-//        Intent intent = new Intent();
-//        intent.setClass(ServiceMainActivity.this, MQTTService.class);
-
-        startUseService(ServiceMainActivity.this, MQTTService.class);
-//        startService(intent);
-    }
-
+    @SuppressLint("ObsoleteSdkInt")
     public static void startUseService(Context ctx, Class cls) {
         Intent intent = new Intent(ctx, cls);
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("config",MyApp.defaultConfig("1883", MyApp.getConfFile()));
-        intent.putExtras(bundle);
+        ctx.startService(intent);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             ctx.startForegroundService(intent);
         } else {
