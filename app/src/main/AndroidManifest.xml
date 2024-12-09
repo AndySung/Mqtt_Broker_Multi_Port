@@ -33,7 +33,6 @@
         </activity>
         <!-- 注册Service -->
         <service android:name=".MQTTService"
-            android:persistent="true"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.soft.nice.service.MQTTService" />

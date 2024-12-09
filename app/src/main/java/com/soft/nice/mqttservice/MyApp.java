@@ -43,7 +43,7 @@ public class MyApp extends Application {
         //指定端口号
         props.setProperty(BrokerConstants.PORT_PROPERTY_NAME, whichPort);
         //必须设置用户名认证，不允许匿名连接
-        props.setProperty(BrokerConstants.NEED_CLIENT_AUTH, "true");
+//        props.setProperty(BrokerConstants.NEED_CLIENT_AUTH, "true");
         //这里直接设置成 0.0.0.0
         props.setProperty(BrokerConstants.HOST_PROPERTY_NAME, BrokerConstants.HOST);
         //websocket 端口号

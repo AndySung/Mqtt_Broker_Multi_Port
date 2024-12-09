@@ -3,7 +3,14 @@ pluginManagement {
         google()
         mavenCentral()
         gradlePluginPortal()
-        jcenter()
+//        maven { url 'https://repo2.optimasidata.com/maven2/repository/io/moquette/moquette-netty-parser/0.8.1/' }
+//        maven { url "https://repo2.optimasidata.com/maven2/repository/io/moquette/moquette-parser-commons/0.8.1/" }
+        maven { url "https://repo2.optimasidata.com/maven2/repository/" }
+        maven { url = uri("https://plugins.gradle.org/m2/") }
+        maven { url = uri("https://repository.axelor.com/nexus/repository/maven-public/") }
+        maven { url = uri("https://repo.maven.apache.org/maven2/") }
+
+
     }
 }
 dependencyResolutionManagement {
@@ -11,7 +18,13 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        jcenter()
+//        maven { url 'https://repo2.optimasidata.com/maven2/repository/io/moquette/moquette-netty-parser/0.8.1/' }
+//        maven { url "https://repo2.optimasidata.com/maven2/repository/io/moquette/moquette-parser-commons/0.8.1/" }
+        maven { url "https://maven.joyyinc.com/nexus/content/repositories/public/" }
+        maven { url "https://repo2.optimasidata.com/maven2/repository/" }
+        maven { url = uri("https://repo.maven.apache.org/maven2/") }
+
+        //maven { url "https://plugins.gradle.org/m2/" }
     }
 }
 rootProject.name = "TestService"

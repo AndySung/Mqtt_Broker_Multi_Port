@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.Settings;
+import android.util.Log;
 
 /**
  * @author AndySong
@@ -32,6 +33,7 @@ public class ServiceMainActivity extends Activity {
             setFirstRun(false);
         }
         getFilePermission();
+        Log.e(TAG, "OnCreate()");
         startUseService(ServiceMainActivity.this, MQTTService.class);
     }
 
@@ -76,7 +78,6 @@ public class ServiceMainActivity extends Activity {
     @SuppressLint("ObsoleteSdkInt")
     public static void startUseService(Context ctx, Class cls) {
         Intent intent = new Intent(ctx, cls);
-        ctx.startService(intent);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             ctx.startForegroundService(intent);
         } else {

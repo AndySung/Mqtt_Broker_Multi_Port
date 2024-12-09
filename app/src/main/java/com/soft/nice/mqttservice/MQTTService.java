@@ -53,6 +53,8 @@ public class MQTTService extends Service {
                     stopService(IntentPortOne);
                 }else if ("stop_port_8883".equals(msg)) {
                     stopService(IntentPortTwo);
+                }else if("crash".equals(msg)) {
+                    causeCrash();
                 }
             }
         }
@@ -88,7 +90,7 @@ public class MQTTService extends Service {
     @SuppressLint({"ForegroundServiceType", "ObsoleteSdkInt"})
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.e(TAG, "onStart()");
+        Log.e(TAG, "onStartCommand()");
         Intent notificationIntent = getBaseContext().getPackageManager().getLaunchIntentForPackage(getPackageName());
         if(intent!=null) {
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -108,7 +110,7 @@ public class MQTTService extends Service {
             Log.e(TAG, Objects.requireNonNull(e.getMessage()));
         }
         startForeground(1, startNotification());
-        return START_STICKY;
+        return Service.START_NOT_STICKY;    // START_STICKY = 1,服务挂掉后会尝试重新拉取保活，START_NOT_STICKY = 2，服务挂了不会拉取服务了
 
     }
 
@@ -137,6 +139,15 @@ public class MQTTService extends Service {
                 .setSmallIcon(R.mipmap.app_icon);
         notification.setContentIntent(pendingIntent);
         return notification.build();
+    }
+
+    //Crash Testing
+    public void causeCrash() {
+        String[] testArray = {"a", "b", "c"};
+        // 故意访问一个不存在的索引，这里索引4是超出数组范围的
+        String testValue = testArray[4];
+        // 这段代码永远不会被执行，因为上面的代码会抛出异常
+        Log.d("CRASH", "This will crash the app: " + testValue);
     }
 
 }
